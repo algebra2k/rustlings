@@ -7,8 +7,7 @@
 // Make this code compile! Execute `rustlings hint advanced_errs1` for
 // hints :)
 
-// I AM NOT DONE
-
+use std::num::IntErrorKind;
 use std::num::ParseIntError;
 use std::str::FromStr;
 
@@ -24,6 +23,10 @@ impl From<CreationError> for ParsePosNonzeroError {
     fn from(e: CreationError) -> Self {
         // TODO: complete this implementation so that the `?` operator will
         // work for `CreationError`
+        match e {
+            CreationError::Negative => ParsePosNonzeroError::Creation(CreationError::Negative),
+            CreationError::Zero => ParsePosNonzeroError::Creation(CreationError::Zero),
+        }
     }
 }
 
@@ -36,8 +39,27 @@ impl From<CreationError> for ParsePosNonzeroError {
 impl FromStr for PositiveNonzeroInteger {
     type Err = ParsePosNonzeroError;
     fn from_str(s: &str) -> Result<PositiveNonzeroInteger, Self::Err> {
-        let x: i64 = s.parse()?;
-        Ok(PositiveNonzeroInteger::new(x)?)
+        match s.parse() {
+            Ok(x) => {
+                if x == 0 {
+                    Err(ParsePosNonzeroError::Creation(CreationError::Zero))
+                } else if x < 0 {
+                    Err(ParsePosNonzeroError::Creation(CreationError::Negative))
+                } else {
+                    Ok(PositiveNonzeroInteger(x))
+                }
+            }
+            Err(err) => match err.kind() {
+                IntErrorKind::InvalidDigit => {
+                    if s.contains('-') || s.contains('+') {
+                        Err(ParsePosNonzeroError::Creation(CreationError::Negative))
+                    } else {
+                        Err(ParsePosNonzeroError::ParseInt(err))
+                    }
+                }
+                _ => Err(ParsePosNonzeroError::ParseInt(err)),
+            },
+        }
     }
 }
 

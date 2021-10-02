@@ -3,16 +3,22 @@
 // can offer. Follow the steps to complete the exercise.
 // As always, there are hints if you execute `rustlings hint iterators2`!
 
-// I AM NOT DONE
-
 // Step 1.
 // Complete the `capitalize_first` function.
 // "hello" -> "Hello"
 pub fn capitalize_first(input: &str) -> String {
     let mut c = input.chars();
+    let mut s: String = String::new();
     match c.next() {
         None => String::new(),
-        Some(first) => ???,
+        Some(first) => {
+            s.push(first.to_ascii_uppercase());
+            while let Some(v) = c.next() {
+                s.push(v);
+            }
+
+            s
+        }
     }
 }
 
@@ -21,7 +27,26 @@ pub fn capitalize_first(input: &str) -> String {
 // Return a vector of strings.
 // ["hello", "world"] -> ["Hello", "World"]
 pub fn capitalize_words_vector(words: &[&str]) -> Vec<String> {
-    vec![]
+    let mut words_vec: Vec<String> = Vec::new();
+    words_vec.reserve(words.len());
+
+    for i in words.iter() {
+        let mut c = (*i).chars();
+        match c.next() {
+            None => {}
+            Some(first) => {
+                let mut s = String::new();
+                s.push(first.to_ascii_uppercase());
+                while let Some(v) = c.next() {
+                    s.push(v);
+                }
+
+                words_vec.push(s);
+            }
+        }
+    }
+
+    words_vec
 }
 
 // Step 3.
@@ -29,7 +54,23 @@ pub fn capitalize_words_vector(words: &[&str]) -> Vec<String> {
 // Return a single string.
 // ["hello", " ", "world"] -> "Hello World"
 pub fn capitalize_words_string(words: &[&str]) -> String {
-    String::new()
+    let mut s = String::new();
+    for i in words.iter() {
+        let mut c = (*i).chars();
+        let new_str = match c.next() {
+            None => String::from(*i),
+            Some(first) => {
+                let mut s = String::new();
+                s.push(first.to_ascii_uppercase());
+                while let Some(v) = c.next() {
+                    s.push(v);
+                }
+                s
+            }
+        };
+        s.push_str(new_str.as_str());
+    }
+    s
 }
 
 #[cfg(test)]

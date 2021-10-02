@@ -6,8 +6,6 @@
 // this function to have.
 // Execute `rustlings hint errors1` for hints!
 
-// I AM NOT DONE
-
 pub fn generate_nametag_text(name: String) -> Option<String> {
     if name.len() > 0 {
         Some(format!("Hi! My name is {}", name))
@@ -34,9 +32,10 @@ mod tests {
 
     #[test]
     fn explains_why_generating_nametag_text_fails() {
-        assert_eq!(
-            generate_nametag_text("".into()),
-            Err("`name` was empty; it must be nonempty.".into())
-        );
+        let text: Result<String, String> = match generate_nametag_text("".into()) {
+            Some(text) => Ok(text),
+            None => Err("`name` was empty; it must be nonempty.".into()),
+        };
+        assert_eq!(text, Err("`name` was empty; it must be nonempty.".into()));
     }
 }
