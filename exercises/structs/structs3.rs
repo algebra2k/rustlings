@@ -17,11 +17,11 @@ impl Package {
             // Something goes here...
             panic!();
         } else {
-            return Package {
+            Package {
                 sender_country,
                 recipient_country,
                 weight_in_grams,
-            };
+            }
         }
     }
 
